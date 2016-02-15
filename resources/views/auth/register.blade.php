@@ -10,20 +10,6 @@
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
                         {!! csrf_field() !!}
 
-                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Name</label>
-
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" name="name" value="{{ old('name') }}">
-
-                                @if ($errors->has('name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                             <label class="col-md-4 control-label">E-Mail Address</label>
 
@@ -61,6 +47,76 @@
                                 @if ($errors->has('password_confirmation'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('password_confirmation') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('firstname') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">First Name</label>
+
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="firstname" value="{{ old('firstname') }}">
+
+                                @if ($errors->has('firstname'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('firstname') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('lastname') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Last Name</label>
+
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="lastname" value="{{ old('lastname') }}">
+
+                                @if ($errors->has('lastname'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('lastname') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('gender') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Gender</label>
+
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="gender" value="{{ old('gender') }}">
+
+                                @if ($errors->has('gender'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('gender') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('date_of_birth') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Date Of Birth</label>
+
+                            <div class="col-md-6">
+                                <input type="text" placeholder="dd/mm/yyyy" class="form-control" name="date_of_birth" value="{{ old('date_of_birth') }}">
+
+                                @if ($errors->has('date_of_birth'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('date_of_birth') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('workplace') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Workplace</label>
+
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="workplace" value="{{ old('workplace') }}">
+
+                                @if ($errors->has('workplace'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('workplace') }}</strong>
                                     </span>
                                 @endif
                             </div>
