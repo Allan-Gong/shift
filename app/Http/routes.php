@@ -31,5 +31,42 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::get('/',     'HomeController@index');
     Route::get('/home', 'HomeController@index');
+
+    // Routes for Shift
+    Route::resource("shifts", "ShiftController");
+    Route::get('shifts/delete/{id}', [
+        'as' => 'shifts.delete',
+        'uses' => 'ShiftController@destroy',
+    ]);
+
+     // Routes for Role
+    Route::resource("roles", "RoleController");
+    Route::get('roles/delete/{id}', [
+        'as' => 'roles.delete',
+        'uses' => 'RoleController@destroy',
+    ]);
+
+     // Routes for Venue
+    Route::resource("venues", "VenueController");
+    Route::get('venues/delete/{id}', [
+        'as' => 'venues.delete',
+        'uses' => 'VenueController@destroy',
+    ]);
+});
+
+
+
+/*
+|--------------------------------------------------------------------------
+| API routes
+|--------------------------------------------------------------------------
+*/
+
+Route::group(['prefix' => 'api', 'namespace' => 'API'], function ()
+{
+	Route::group(['prefix' => 'v1'], function ()
+	{
+        require config('infyom.laravel_generator.path.api_routes');
+	});
 });
 

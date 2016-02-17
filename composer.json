@@ -7,9 +7,17 @@
     "require": {
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
-        "laravelcollective/html": "~5.0",
+        "infyomlabs/laravel-generator": "dev-master",
+        "infyomlabs/core-templates": "dev-master",
+        "laravelcollective/html": "5.2.*",
+        "infyomlabs/swagger-generator": "dev-master",
+        "jlapp/swaggervel": "dev-master",
         "frozennode/administrator": " 5.*",
-        "barryvdh/laravel-ide-helper": "^2.1"
+        "barryvdh/laravel-ide-helper": "^2.1",
+        "barryvdh/laravel-debugbar": "^2.1",
+        "intervention/image": "^2.3",
+        "barryvdh/laravel-dompdf": "0.6.*",
+        "doctrine/dbal": "~2.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
