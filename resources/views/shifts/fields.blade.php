@@ -1,13 +1,84 @@
-<!--- Id Field --->
-<div class="form-group col-sm-6">
-    {!! Form::label('id', 'Id:') !!}
-    {!! Form::number('id', null, ['class' => 'form-control']) !!}
-</div>
+<?php
+
+// $times = array(
+//     '00:00' => '00:00',
+//     '00:30' => '00:30',
+//     '01:00' => '01:00',
+//     '01:30' => '01:30',
+//     '02:00' => '02:00',
+//     '02:30' => '02:30',
+//     '03:00' => '03:00',
+//     '03:30' => '03:30',
+//     '04:00' => '04:00',
+//     '04:30' => '04:30',
+//     '05:00' => '05:00',
+//     '05:30' => '05:30',
+//     '06:00' => '06:00',
+//     '06:30' => '06:30',
+//     '07:00' => '07:00',
+//     '07:30' => '07:30',
+//     '08:00' => '08:00',
+//     '08:30' => '08:30',
+//     '09:00' => '09:00',
+//     '09:30' => '09:30',
+//     '10:00' => '10:00',
+//     '10:30' => '10:30',
+//     '11:00' => '11:00',
+//     '11:30' => '11:30',
+//     '12:00' => '12:00',
+//     '12:30' => '12:30',
+//     '13:00' => '13:00',
+//     '13:30' => '13:30',
+//     '14:00' => '14:00',
+//     '14:30' => '14:30',
+//     '15:00' => '15:00',
+//     '15:30' => '15:30',
+//     '16:00' => '16:00',
+//     '16:30' => '16:30',
+//     '17:00' => '17:00',
+//     '17:30' => '17:30',
+//     '18:00' => '18:00',
+//     '18:30' => '18:30',
+//     '19:00' => '19:00',
+//     '19:30' => '19:30',
+//     '20:00' => '20:00',
+//     '20:30' => '20:30',
+//     '21:00' => '21:00',
+//     '21:30' => '21:30',
+//     '22:00' => '22:00',
+//     '22:30' => '22:30',
+//     '23:00' => '23:00',
+//     '23:30' => '23:30',
+// );
+
+$select_times = array();
+for ( $i = 0; $i < 24; $i ++) {
+    $i_padded = sprintf("%02d", $i);
+    for ( $j = 0; $j < 2; $j ++) {
+        if ( $j == 0 ) {
+            $select_times["{$i_padded}:00"] = "{$i_padded}:00";
+        } else {
+            $select_times["{$i_padded}:30"] = "{$i_padded}:30";
+        }
+    }
+}
+
+$select_roles = array();
+foreach ( $roles as $role ) {
+    $select_roles[$role->id] = $role->role;
+}
+
+$select_venues = array();
+foreach ( $venues as $venue ) {
+    $select_venues[$venue->id] = $venue->venue;
+}
+
+?>
 
 <!--- Role Field --->
 <div class="form-group col-sm-6">
     {!! Form::label('role', 'Role:') !!}
-    {!! Form::number('role', null, ['class' => 'form-control']) !!}
+    {!! Form::select('role', $select_roles, null, ['class' => 'form-control']) !!}
 </div>
 
 <!--- Assignee Field --->
@@ -19,31 +90,37 @@
 <!--- Venue Field --->
 <div class="form-group col-sm-6">
     {!! Form::label('venue', 'Venue:') !!}
-    {!! Form::number('venue', null, ['class' => 'form-control']) !!}
+    {!! Form::select('venue', $select_venues, null, ['class' => 'form-control']) !!}
+</div>
+
+<!--- Date Field --->
+<div class="form-group col-sm-6">
+    {!! Form::label('date', 'Date:') !!}
+    {!! Form::date('date', null, ['class' => 'form-control']) !!}
 </div>
 
 <!--- Start Time Field --->
 <div class="form-group col-sm-6">
     {!! Form::label('start_time', 'Start Time:') !!}
-    {!! Form::date('start_time', null, ['class' => 'form-control']) !!}
+    {!! Form::select('start_time', $select_times, null, ['class' => 'form-control']) !!}
 </div>
 
 <!--- Finish Time Field --->
 <div class="form-group col-sm-6">
     {!! Form::label('finish_time', 'Finish Time:') !!}
-    {!! Form::date('finish_time', null, ['class' => 'form-control']) !!}
+    {!! Form::select('finish_time', $select_times, null, ['class' => 'form-control']) !!}
 </div>
 
 <!--- Clock On Field --->
 <div class="form-group col-sm-6">
     {!! Form::label('clock_on', 'Clock On:') !!}
-    {!! Form::date('clock_on', null, ['class' => 'form-control']) !!}
+    {!! Form::select('clock_on', $select_times, null, ['class' => 'form-control']) !!}
 </div>
 
 <!--- Clock Off Field --->
 <div class="form-group col-sm-6">
     {!! Form::label('clock_off', 'Clock Off:') !!}
-    {!! Form::date('clock_off', null, ['class' => 'form-control']) !!}
+    {!! Form::select('clock_off', $select_times, null, ['class' => 'form-control']) !!}
 </div>
 
 <!--- Status Field --->
@@ -56,18 +133,6 @@
 <div class="form-group col-sm-6">
     {!! Form::label('notes', 'Notes:') !!}
     {!! Form::text('notes', null, ['class' => 'form-control']) !!}
-</div>
-
-<!--- Created At Field --->
-<div class="form-group col-sm-6">
-    {!! Form::label('created_at', 'Created At:') !!}
-    {!! Form::date('created_at', null, ['class' => 'form-control']) !!}
-</div>
-
-<!--- Updated At Field --->
-<div class="form-group col-sm-6">
-    {!! Form::label('updated_at', 'Updated At:') !!}
-    {!! Form::date('updated_at', null, ['class' => 'form-control']) !!}
 </div>
 
 <!--- Submit Field --->

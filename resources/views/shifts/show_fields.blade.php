@@ -7,19 +7,19 @@
 <!-- Role Field -->
 <div class="form-group">
     {!! Form::label('role', 'Role:') !!}
-    <p>{!! $shift->role !!}</p>
+    <p>{!! $shift->role->role !!}</p>
 </div>
 
 <!-- Assignee Field -->
 <div class="form-group">
     {!! Form::label('assignee', 'Assignee:') !!}
-    <p>{!! $shift->assignee !!}</p>
+    <p>{!! $shift->assignee->email !!}</p>
 </div>
 
 <!-- Venue Field -->
 <div class="form-group">
     {!! Form::label('venue', 'Venue:') !!}
-    <p>{!! $shift->venue !!}</p>
+    <p>{!! $shift->venue->venue !!}</p>
 </div>
 
 <!-- Start Time Field -->

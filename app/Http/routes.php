@@ -27,31 +27,36 @@ Route::get('/', function () {
 */
 
 Route::group(['middleware' => 'web'], function () {
-    Route::auth();
+    Route::auth(); // shortcut to define authentication related routes (e.g.login, logout, register, password reset)
 
     Route::get('/',     'HomeController@index');
     Route::get('/home', 'HomeController@index');
 
-    // Routes for Shift
-    Route::resource("shifts", "ShiftController");
-    Route::get('shifts/delete/{id}', [
-        'as' => 'shifts.delete',
-        'uses' => 'ShiftController@destroy',
-    ]);
+    // Protected routes for logged-in users
+    Route::group(['middleware' => 'auth'], function () {
 
-     // Routes for Role
-    Route::resource("roles", "RoleController");
-    Route::get('roles/delete/{id}', [
-        'as' => 'roles.delete',
-        'uses' => 'RoleController@destroy',
-    ]);
+        // Routes for Shift
+        Route::resource("shifts", "ShiftController");
+        Route::get('shifts/delete/{id}', [
+            'as' => 'shifts.delete',
+            'uses' => 'ShiftController@destroy',
+        ]);
 
-     // Routes for Venue
-    Route::resource("venues", "VenueController");
-    Route::get('venues/delete/{id}', [
-        'as' => 'venues.delete',
-        'uses' => 'VenueController@destroy',
-    ]);
+         // Routes for Role
+        Route::resource("roles", "RoleController");
+        Route::get('roles/delete/{id}', [
+            'as' => 'roles.delete',
+            'uses' => 'RoleController@destroy',
+        ]);
+
+         // Routes for Venue
+        Route::resource("venues", "VenueController");
+        Route::get('venues/delete/{id}', [
+            'as' => 'venues.delete',
+            'uses' => 'VenueController@destroy',
+        ]);
+
+    });
 });
 
 

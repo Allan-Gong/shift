@@ -44,16 +44,16 @@ class Venue extends Model
     use SoftDeletes;
 
 	public $table = "venues";
-	
+
 	protected $dates = ['deleted_at'];
 
 	public $fillable = [
-	    "id",
+	    // "id",
 		"venue",
 		"address",
-		"created_at",
-		"updated_at",
-		"deleted_at"
+		// "created_at",
+		// "updated_at",
+		// "deleted_at"
 	];
 
     /**
@@ -73,6 +73,6 @@ class Venue extends Model
      * @var array
      */
 	public static $rules = [
-	    
+
 	];
 }

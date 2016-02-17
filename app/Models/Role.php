@@ -44,16 +44,16 @@ class Role extends Model
     use SoftDeletes;
 
 	public $table = "roles";
-	
+
 	protected $dates = ['deleted_at'];
 
 	public $fillable = [
-	    "id",
+	    // "id",
 		"role",
 		"pay_rate",
-		"created_at",
-		"updated_at",
-		"deleted_at"
+		// "created_at",
+		// "updated_at",
+		// "deleted_at"
 	];
 
     /**
@@ -73,6 +73,6 @@ class Role extends Model
      * @var array
      */
 	public static $rules = [
-	    
+
 	];
 }

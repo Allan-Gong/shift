@@ -55,6 +55,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *          type="string",
  *          format="date-time"
  *      )
+*      @SWG\Property(
+ *          property="date",
+ *          description="date",
+ *          type="string",
+ *          format="date"
+ *      )
  * )
  */
 class Shift extends Model
@@ -62,22 +68,23 @@ class Shift extends Model
     use SoftDeletes;
 
 	public $table = "shifts";
-	
+
 	protected $dates = ['deleted_at'];
 
 	public $fillable = [
-	    "id",
+	    // "id",
 		"role",
 		"assignee",
 		"venue",
+        "date",
 		"start_time",
 		"finish_time",
 		"clock_on",
 		"clock_off",
 		"status",
 		"notes",
-		"created_at",
-		"updated_at"
+		// "created_at",
+		// "updated_at"
 	];
 
     /**
@@ -100,6 +107,6 @@ class Shift extends Model
      * @var array
      */
 	public static $rules = [
-	    
+
 	];
 }

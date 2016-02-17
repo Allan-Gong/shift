@@ -6,6 +6,8 @@ use App\Http\Requests;
 use App\Http\Requests\CreateShiftRequest;
 use App\Http\Requests\UpdateShiftRequest;
 use App\Repositories\ShiftRepository;
+use App\Repositories\RoleRepository;
+use App\Repositories\VenueRepository;
 use Illuminate\Http\Request;
 use Flash;
 use InfyOm\Generator\Controller\AppBaseController;
@@ -16,10 +18,14 @@ class ShiftController extends AppBaseController
 {
 	/** @var  ShiftRepository */
 	private $shiftRepository;
+	private $roleRepository;
+	private $venueRepository;
 
-	function __construct(ShiftRepository $shiftRepo)
+	function __construct(ShiftRepository $shiftRepo, RoleRepository $roleRepo, VenueRepository $venueRepo)
 	{
 		$this->shiftRepository = $shiftRepo;
+		$this->roleRepository = $roleRepo;
+		$this->venueRepository = $venueRepo;
 	}
 
 	/**
@@ -33,8 +39,14 @@ class ShiftController extends AppBaseController
         $this->shiftRepository->pushCriteria(new RequestCriteria($request));
 		$shifts = $this->shiftRepository->all();
 
+		// $roles = $this->roleRepository->all();
+		// $venues = $this->venueRepository->all();
+
 		return view('shifts.index')
-			->with('shifts', $shifts);
+			->with(array(
+				'shifts' => $shifts,
+			))
+		;
 	}
 
 	/**
@@ -44,7 +56,15 @@ class ShiftController extends AppBaseController
 	 */
 	public function create()
 	{
-		return view('shifts.create');
+		$roles = $this->roleRepository->all();
+		$venues = $this->venueRepository->all();
+
+		return view('shifts.create')
+			->with(array(
+				'roles'  => $roles,
+				'venues' => $venues,
+			))
+		;
 	}
 
 	/**
