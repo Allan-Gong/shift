@@ -2,12 +2,14 @@
 
 $application_environment = config('app.env');
 
+// print_r('application_environment: ' . $application_environment);
+
 $mysql_host     = env('DB_HOST',     'localhost');
 $mysql_database = env('DB_DATABASE', 'laravel');
 $mysql_username = env('DB_USERNAME', 'laravel');
 $mysql_password = env('DB_PASSWORD', 'laravel');
 
-if ( $application_environment == 'production' ) {
+if ( $application_environment != 'local' ) {
     $cleardb_database_url = parse_url(getenv("CLEARDB_DATABASE_URL"));
 
     $mysql_host     = $cleardb_database_url["host"];
