@@ -1,5 +1,21 @@
 <?php
 
+$application_environment = config('app.APP_ENV');
+
+$mysql_host     = env('DB_HOST',     'localhost');
+$mysql_database = env('DB_DATABASE', 'laravel');
+$mysql_username = env('DB_USERNAME', 'laravel');
+$mysql_password = env('DB_PASSWORD', 'laravel');
+
+if ( $application_environment == 'production' ) {
+    $cleardb_database_url = parse_url(getenv("CLEARDB_DATABASE_URL"));
+
+    $mysql_host     = $cleardb_database_url["host"];
+    $mysql_database = substr($cleardb_database_url["path"], 1);
+    $mysql_username = $cleardb_database_url["user"];
+    $mysql_password = $cleardb_database_url["pass"];
+}
+
 return [
 
     /*
@@ -54,10 +70,10 @@ return [
 
         'mysql' => [
             'driver'    => 'mysql',
-            'host'      => env('DB_HOST', 'localhost'),
-            'database'  => env('DB_DATABASE', 'laravel'),
-            'username'  => env('DB_USERNAME', 'laravel'),
-            'password'  => env('DB_PASSWORD', 'laravel'),
+            'host'      => $mysql_host,
+            'database'  => $mysql_database,
+            'username'  => $mysql_username,
+            'password'  => $mysql_password,
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
