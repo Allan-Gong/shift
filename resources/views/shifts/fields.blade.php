@@ -73,6 +73,11 @@ foreach ( $venues as $venue ) {
     $select_venues[$venue->id] = $venue->venue;
 }
 
+$select_users = array();
+foreach ( $users as $user ) {
+    $select_users[$user->id] = $user->firstname . '&nbsp;' . $user->lastname;
+}
+
 ?>
 
 <!--- Role Field --->
@@ -84,7 +89,7 @@ foreach ( $venues as $venue ) {
 <!--- Assignee Field --->
 <div class="form-group col-sm-6">
     {!! Form::label('assignee', 'Assignee:') !!}
-    {!! Form::number('assignee', null, ['class' => 'form-control']) !!}
+    {!! Form::select('assignee', $select_users, null, ['class' => 'form-control']) !!}
 </div>
 
 <!--- Venue Field --->

@@ -94,9 +94,9 @@ class Shift extends Model
      */
     protected $casts = [
         "id" => "integer",
-		"role" => "integer",
-		"assignee" => "integer",
-		"venue" => "integer",
+		// "role" => "object",
+		// "assignee" => "object",
+		// "venue" => "object",
 		"status" => "string",
 		"notes" => "string"
     ];
@@ -109,4 +109,19 @@ class Shift extends Model
 	public static $rules = [
 
 	];
+
+    public function role()
+    {
+        return $this->belongsTo('App\Models\Role', 'role');
+    }
+
+    public function assignee()
+    {
+        return $this->belongsTo('App\Models\User', 'assignee');
+    }
+
+    public function venue()
+    {
+        return $this->belongsTo('App\Models\Venue', 'venue');
+    }
 }

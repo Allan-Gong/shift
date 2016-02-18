@@ -1,3 +1,16 @@
+<?php
+
+// $role = $shifts[0]->role();
+
+// print_r($role);
+
+
+// foreach($shifts as $shift) {
+//   $role = $shift->role();
+//   print_r($role);
+// }
+?>
+
 <table class="table table-responsive">
     <thead>
     <th>Id</th>
@@ -19,9 +32,9 @@
     @foreach($shifts as $shift)
         <tr>
           <td>{!! $shift->id !!}</td>
-    			<td>{!! $shift->role->role !!}</td>
-    			<td>{!! $shift->assignee->email !!}</td>
-    			<td>{!! $shift->venue->venue !!}</td>
+    			<td>{!! $shift->role()->get()->first()->role !!}</td>
+    			<td>{!! $shift->assignee()->get()->first()->name() !!}</td>
+    			<td>{!! $shift->venue()->get()->first()->venue !!}</td>
           <td>{!! $shift->date !!}</td>
     			<td>{!! $shift->start_time !!}</td>
     			<td>{!! $shift->finish_time !!}</td>

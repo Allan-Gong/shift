@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Requests\CreateShiftRequest;
 use App\Http\Requests\UpdateShiftRequest;
+use App\Repositories\UserRepository;
 use App\Repositories\ShiftRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\VenueRepository;
@@ -20,12 +21,14 @@ class ShiftController extends AppBaseController
 	private $shiftRepository;
 	private $roleRepository;
 	private $venueRepository;
+	private $userRepository;
 
-	function __construct(ShiftRepository $shiftRepo, RoleRepository $roleRepo, VenueRepository $venueRepo)
+	function __construct(ShiftRepository $shiftRepo, RoleRepository $roleRepo, VenueRepository $venueRepo, UserRepository $userRepo)
 	{
 		$this->shiftRepository = $shiftRepo;
-		$this->roleRepository = $roleRepo;
+		$this->roleRepository  = $roleRepo;
 		$this->venueRepository = $venueRepo;
+		$this->userRepository  = $userRepo;
 	}
 
 	/**
@@ -56,13 +59,15 @@ class ShiftController extends AppBaseController
 	 */
 	public function create()
 	{
-		$roles = $this->roleRepository->all();
+		$roles  = $this->roleRepository->all();
 		$venues = $this->venueRepository->all();
+		$users  = $this->userRepository->all();
 
 		return view('shifts.create')
 			->with(array(
 				'roles'  => $roles,
 				'venues' => $venues,
+				'users'  => $users,
 			))
 		;
 	}
@@ -116,13 +121,24 @@ class ShiftController extends AppBaseController
 	{
 		$shift = $this->shiftRepository->findWithoutFail($id);
 
+		$roles  = $this->roleRepository->all();
+		$venues = $this->venueRepository->all();
+		$users  = $this->userRepository->all();
+
 		if (empty($shift)) {
 			Flash::error('Shift not found');
 
 			return redirect(route('shifts.index'));
 		}
 
-		return view('shifts.edit')->with('shift', $shift);
+		return view('shifts.edit')
+			->with(array(
+				'roles'  => $roles,
+				'venues' => $venues,
+				'users'  => $users,
+				'shift'  => $shift,
+			))
+		;
 	}
 
 	/**

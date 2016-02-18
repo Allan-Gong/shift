@@ -30,4 +30,14 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function name()
+    {
+        return $this->firstname . '&nbsp;' . $this->lastname;
+    }
+
+    public function shifts()
+    {
+        return $this->hasMany('App\Models\Shift');
+    }
 }

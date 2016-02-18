@@ -75,4 +75,9 @@ class Role extends Model
 	public static $rules = [
 
 	];
+
+    public function shifts()
+    {
+        return $this->hasMany('App\Models\Shift');
+    }
 }

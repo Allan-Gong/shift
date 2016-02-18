@@ -75,4 +75,9 @@ class Venue extends Model
 	public static $rules = [
 
 	];
+
+    public function shifts()
+    {
+        return $this->hasMany('App\Models\Shift');
+    }
 }
