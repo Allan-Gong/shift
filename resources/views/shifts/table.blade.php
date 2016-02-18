@@ -32,9 +32,9 @@
     @foreach($shifts as $shift)
         <tr>
           <td>{!! $shift->id !!}</td>
-    			<td>{!! $shift->get_role() !!}</td>
-    			<td>{!! $shift->get_assignee() !!}</td>
-    			<td>{!! $shift->get_venue() !!}</td>
+    			<td>{!! $shift->role->role !!}</td>
+    			<td>{!! $shift->user->name() !!}</td>
+    			<td>{!! $shift->venue->vanue !!}</td>
           <td>{!! $shift->date !!}</td>
     			<td>{!! $shift->start_time !!}</td>
     			<td>{!! $shift->finish_time !!}</td>

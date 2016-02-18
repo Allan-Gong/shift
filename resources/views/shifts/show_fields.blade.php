@@ -13,7 +13,7 @@
 <!-- Assignee Field -->
 <div class="form-group">
     {!! Form::label('assignee', 'Assignee:') !!}
-    <p>{!! $shift->assignee->email !!}</p>
+    <p>{!! $shift->user->name !!}</p>
 </div>
 
 <!-- Venue Field -->

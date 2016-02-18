@@ -16,20 +16,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *          format="int32"
  *      ),
  *      @SWG\Property(
- *          property="role",
- *          description="role",
+ *          property="role_id",
+ *          description="role id",
  *          type="integer",
  *          format="int32"
  *      ),
  *      @SWG\Property(
- *          property="assignee",
- *          description="assignee",
+ *          property="user_id",
+ *          description="user id",
  *          type="integer",
  *          format="int32"
  *      ),
  *      @SWG\Property(
- *          property="venue",
- *          description="venue",
+ *          property="venue_id",
+ *          description="venue id",
  *          type="integer",
  *          format="int32"
  *      ),
@@ -73,9 +73,9 @@ class Shift extends Model
 
 	public $fillable = [
 	    // "id",
-		"role",
-		"assignee",
-		"venue",
+		"role_id",
+		"user_id",
+		"venue_id",
         "date",
 		"start_time",
 		"finish_time",
@@ -94,9 +94,9 @@ class Shift extends Model
      */
     protected $casts = [
         "id" => "integer",
-		// "role" => "object",
-		// "assignee" => "object",
-		// "venue" => "object",
+		"role_id" => "integer",
+		"user_id" => "integer",
+		"venue_id" => "integer",
 		"status" => "string",
 		"notes" => "string"
     ];
@@ -112,43 +112,43 @@ class Shift extends Model
 
     public function role()
     {
-        return $this->belongsTo('App\Models\Role', 'role');
+        return $this->belongsTo('App\Models\Role');
     }
 
-    public function assignee()
+    public function user()
     {
-        return $this->belongsTo('App\Models\User', 'assignee');
+        return $this->belongsTo('App\Models\User');
     }
 
     public function venue()
     {
-        return $this->belongsTo('App\Models\Venue', 'venue');
+        return $this->belongsTo('App\Models\Venue');
     }
 
-    public function get_role()
-    {
-        $role = $this->role()->get()->first();
+    // public function get_role()
+    // {
+    //     $role = $this->role()->get()->first();
 
-        $result = $role ? $role->role : null;
+    //     $result = $role ? $role->role : null;
 
-        return $result;
-    }
+    //     return $result;
+    // }
 
-    public function get_assignee()
-    {
-        $assignee = $this->assignee()->get()->first();
+    // public function get_assignee()
+    // {
+    //     $assignee = $this->assignee()->get()->first();
 
-        $result = $assignee ? $assignee->name() : null;
+    //     $result = $assignee ? $assignee->name() : null;
 
-        return $result;
-    }
+    //     return $result;
+    // }
 
-        public function get_venue()
-    {
-        $venue = $this->venue()->get()->first();
+    // public function get_venue()
+    // {
+    //     $venue = $this->venue()->get()->first();
 
-        $result = $venue ? $venue->venue : null;
+    //     $result = $venue ? $venue->venue : null;
 
-        return $result;
-    }
+    //     return $result;
+    // }
 }

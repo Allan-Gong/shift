@@ -1,56 +1,5 @@
 <?php
 
-// $times = array(
-//     '00:00' => '00:00',
-//     '00:30' => '00:30',
-//     '01:00' => '01:00',
-//     '01:30' => '01:30',
-//     '02:00' => '02:00',
-//     '02:30' => '02:30',
-//     '03:00' => '03:00',
-//     '03:30' => '03:30',
-//     '04:00' => '04:00',
-//     '04:30' => '04:30',
-//     '05:00' => '05:00',
-//     '05:30' => '05:30',
-//     '06:00' => '06:00',
-//     '06:30' => '06:30',
-//     '07:00' => '07:00',
-//     '07:30' => '07:30',
-//     '08:00' => '08:00',
-//     '08:30' => '08:30',
-//     '09:00' => '09:00',
-//     '09:30' => '09:30',
-//     '10:00' => '10:00',
-//     '10:30' => '10:30',
-//     '11:00' => '11:00',
-//     '11:30' => '11:30',
-//     '12:00' => '12:00',
-//     '12:30' => '12:30',
-//     '13:00' => '13:00',
-//     '13:30' => '13:30',
-//     '14:00' => '14:00',
-//     '14:30' => '14:30',
-//     '15:00' => '15:00',
-//     '15:30' => '15:30',
-//     '16:00' => '16:00',
-//     '16:30' => '16:30',
-//     '17:00' => '17:00',
-//     '17:30' => '17:30',
-//     '18:00' => '18:00',
-//     '18:30' => '18:30',
-//     '19:00' => '19:00',
-//     '19:30' => '19:30',
-//     '20:00' => '20:00',
-//     '20:30' => '20:30',
-//     '21:00' => '21:00',
-//     '21:30' => '21:30',
-//     '22:00' => '22:00',
-//     '22:30' => '22:30',
-//     '23:00' => '23:00',
-//     '23:30' => '23:30',
-// );
-
 $select_times = array();
 for ( $i = 0; $i < 24; $i ++) {
     $i_padded = sprintf("%02d", $i);
@@ -75,7 +24,7 @@ foreach ( $venues as $venue ) {
 
 $select_users = array();
 foreach ( $users as $user ) {
-    $select_users[$user->id] = $user->firstname . '&nbsp;' . $user->lastname;
+    $select_users[$user->id] = $user->name();
 }
 
 ?>
@@ -83,19 +32,19 @@ foreach ( $users as $user ) {
 <!--- Role Field --->
 <div class="form-group col-sm-6">
     {!! Form::label('role', 'Role:') !!}
-    {!! Form::select('role', $select_roles, null, ['class' => 'form-control']) !!}
+    {!! Form::select('role_id', $select_roles, null, ['class' => 'form-control']) !!}
 </div>
 
 <!--- Assignee Field --->
 <div class="form-group col-sm-6">
     {!! Form::label('assignee', 'Assignee:') !!}
-    {!! Form::select('assignee', $select_users, null, ['class' => 'form-control']) !!}
+    {!! Form::select('user_id', $select_users, null, ['class' => 'form-control']) !!}
 </div>
 
 <!--- Venue Field --->
 <div class="form-group col-sm-6">
     {!! Form::label('venue', 'Venue:') !!}
-    {!! Form::select('venue', $select_venues, null, ['class' => 'form-control']) !!}
+    {!! Form::select('venue_id', $select_venues, null, ['class' => 'form-control']) !!}
 </div>
 
 <!--- Date Field --->
