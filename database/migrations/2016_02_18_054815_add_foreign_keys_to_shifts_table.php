@@ -12,7 +12,7 @@ class AddForeignKeysToShiftsTable extends Migration
      */
     public function up()
     {
-        Schema::table('shiftsle', function (Blueprint $table) {
+        Schema::table('shifts', function (Blueprint $table) {
             $table->foreign('role')->references('id')->on('roles');
             $table->foreign('assignee')->references('id')->on('users');
             $table->foreign('venue')->references('id')->on('venues');
@@ -26,7 +26,7 @@ class AddForeignKeysToShiftsTable extends Migration
      */
     public function down()
     {
-        Schema::table('shiftsle', function (Blueprint $table) {
+        Schema::table('shifts', function (Blueprint $table) {
             //
         });
     }
