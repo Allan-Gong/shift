@@ -124,4 +124,31 @@ class Shift extends Model
     {
         return $this->belongsTo('App\Models\Venue', 'venue');
     }
+
+    public function get_role()
+    {
+        $role = $this->role()->get()->first();
+
+        $result = $role ? $role->role : null;
+
+        return $result;
+    }
+
+    public function get_assignee()
+    {
+        $assignee = $this->assignee()->get()->first();
+
+        $result = $assignee ? $assignee->name() : null;
+
+        return $result;
+    }
+
+        public function get_venue()
+    {
+        $venue = $this->venue()->get()->first();
+
+        $result = $venue ? $venue->venue : null;
+
+        return $result;
+    }
 }
