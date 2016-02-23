@@ -2,8 +2,6 @@
 
 $application_environment = config('app.env');
 
-// print_r('application_environment: ' . $application_environment);
-
 $mysql_host     = env('DB_HOST',     'localhost');
 $mysql_database = env('DB_DATABASE', 'laravel');
 $mysql_username = env('DB_USERNAME', 'laravel');

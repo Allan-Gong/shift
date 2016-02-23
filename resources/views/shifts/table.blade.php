@@ -1,16 +1,3 @@
-<?php
-
-// $role = $shifts[0]->role();
-
-// print_r($role);
-
-
-// foreach($shifts as $shift) {
-//   $role = $shift->role();
-//   print_r($role);
-// }
-?>
-
 <table class="table table-responsive">
     <thead>
     <th>Id</th>
@@ -30,17 +17,18 @@
     </thead>
     <tbody>
     @foreach($shifts as $shift)
+        <?php //print_r($shift); ?>
         <tr>
           <td>{!! $shift->id !!}</td>
-    			<td>{!! $shift->role->role !!}</td>
-    			<td>{!! $shift->user->name() !!}</td>
-    			<td>{!! $shift->venue->vanue !!}</td>
+    			<td>{!! $shift->get_role_string() !!}</td>
+    			<td>{!! $shift->get_user_string() !!}</td>
+    			<td>{!! $shift->get_venue_string() !!}</td>
           <td>{!! $shift->date !!}</td>
     			<td>{!! $shift->start_time !!}</td>
     			<td>{!! $shift->finish_time !!}</td>
     			<td>{!! $shift->clock_on !!}</td>
     			<td>{!! $shift->clock_off !!}</td>
-    			<td>{!! $shift->status !!}</td>
+    			<td>{!! $shift->get_status_string() !!}</td>
     			<td>{!! $shift->notes !!}</td>
 			<!-- <td>{!! $shift->created_at !!}</td> -->
 			<!-- <td>{!! $shift->updated_at !!}</td> -->

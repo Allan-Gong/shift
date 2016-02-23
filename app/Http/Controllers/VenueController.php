@@ -147,9 +147,14 @@ class VenueController extends AppBaseController
 			return redirect(route('venues.index'));
 		}
 
-		$this->venueRepository->delete($id);
-
-		Flash::success('Venue deleted successfully.');
+		try {
+			$this->venueRepository->delete($id);
+			Flash::success('Venue deleted successfully.');
+		} catch(\Exception $exception) {
+			$exception_message = $exception->getMessage();
+			Log::error($exception_message);
+			Flash::error('Failed to delete Venue ' . $role->role . '<br />' . $exception_message);
+		}
 
 		return redirect(route('venues.index'));
 	}

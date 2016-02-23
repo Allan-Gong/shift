@@ -12,6 +12,8 @@ use InfyOm\Generator\Controller\AppBaseController;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
+use Log;
+
 class RoleController extends AppBaseController
 {
 	/** @var  RoleRepository */
@@ -147,9 +149,14 @@ class RoleController extends AppBaseController
 			return redirect(route('roles.index'));
 		}
 
-		$this->roleRepository->delete($id);
-
-		Flash::success('Role deleted successfully.');
+		try {
+			$this->roleRepository->delete($id);
+			Flash::success('Role deleted successfully.');
+		} catch(\Exception $exception) {
+			$exception_message = $exception->getMessage();
+			Log::error($exception_message);
+			Flash::error('Failed to delete Role ' . $role->role . '<br />' . $exception_message);
+		}
 
 		return redirect(route('roles.index'));
 	}

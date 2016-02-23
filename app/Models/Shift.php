@@ -5,64 +5,6 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * @SWG\Definition(
- *      definition="Shift",
- *      required={},
- *      @SWG\Property(
- *          property="id",
- *          description="id",
- *          type="integer",
- *          format="int32"
- *      ),
- *      @SWG\Property(
- *          property="role_id",
- *          description="role id",
- *          type="integer",
- *          format="int32"
- *      ),
- *      @SWG\Property(
- *          property="user_id",
- *          description="user id",
- *          type="integer",
- *          format="int32"
- *      ),
- *      @SWG\Property(
- *          property="venue_id",
- *          description="venue id",
- *          type="integer",
- *          format="int32"
- *      ),
- *      @SWG\Property(
- *          property="status",
- *          description="status",
- *          type="string"
- *      ),
- *      @SWG\Property(
- *          property="notes",
- *          description="notes",
- *          type="string"
- *      ),
- *      @SWG\Property(
- *          property="created_at",
- *          description="created_at",
- *          type="string",
- *          format="date-time"
- *      ),
- *      @SWG\Property(
- *          property="updated_at",
- *          description="updated_at",
- *          type="string",
- *          format="date-time"
- *      )
-*      @SWG\Property(
- *          property="date",
- *          description="date",
- *          type="string",
- *          format="date"
- *      )
- * )
- */
 class Shift extends Model
 {
     use SoftDeletes;
@@ -81,8 +23,9 @@ class Shift extends Model
 		"finish_time",
 		"clock_on",
 		"clock_off",
-		"status",
+		"shift_status_id",
 		"notes",
+        "shift_type_id",
 		// "created_at",
 		// "updated_at"
 	];
@@ -125,30 +68,92 @@ class Shift extends Model
         return $this->belongsTo('App\Models\Venue');
     }
 
-    // public function get_role()
-    // {
-    //     $role = $this->role()->get()->first();
+    public function shift_type()
+    {
+        return $this->belongsTo('App\Models\ShiftType');
+    }
 
-    //     $result = $role ? $role->role : null;
+    public function shift_status()
+    {
+        return $this->belongsTo('App\Models\ShiftStatus');
+    }
 
-    //     return $result;
-    // }
+    public function shift_meta()
+    {
+        return $this->hasOne('App\Models\Shift_meta');
+    }
 
-    // public function get_assignee()
-    // {
-    //     $assignee = $this->assignee()->get()->first();
+    public function get_status_string()
+    {
+        if ( !$this->shift_status ) { return null; }
 
-    //     $result = $assignee ? $assignee->name() : null;
+        return $this->shift_status->status;
+    }
 
-    //     return $result;
-    // }
+    public function get_role_string()
+    {
+        if ( !$this->role ) { return null; }
 
-    // public function get_venue()
-    // {
-    //     $venue = $this->venue()->get()->first();
+        return $this->role->role;
+    }
 
-    //     $result = $venue ? $venue->venue : null;
+    public function get_user_string()
+    {
+        if ( !$this->user ) { return null; }
 
-    //     return $result;
-    // }
+        return $this->user->name();
+    }
+
+    public function get_venue_string()
+    {
+        if ( !$this->venue ) { return null; }
+
+        return $this->venue->venue;
+    }
+
+    public function get_all_shifts_between($start_date, $end_date)
+    {
+        $dt_start_date = new DateTime($start_date);
+        $dt_end_date   = new DateTime($end_date);
+
+        $shift_type_standalone = $this->findWhere(['type' => 'standalone'])->first();
+        $shift_type_repstandalone_id = $shift_type_standalone->id;
+
+        $shift_type_repeat = $this->findWhere(['type' => 'repeating'])->first();
+        $shift_type_repeat_id = $shift_type_repeat->id;
+
+        $standalone_shifts = DB::table('shifts')
+            ->where('shift_type_id', '$shift_type_repstandalone_id')
+            ->whereBetween('date', [$start_date, $end_date])
+            ->orderBy('date')
+            ->get()
+        ;
+
+        $repeating_shifts = [];
+
+        $daterange = new DatePeriod($dt_start_date, new DateInterval('P1D'), $dt_end_date); // P1D stands for period of one day
+
+        foreach($daterange as $date){
+
+            $result = DB::table('shifts')
+                ->join('shift_metas', 'shifts.id', '=', 'shift_metas.shift_id')
+                ->whereRaw('shift_metas.repeat_end <= CURRENT_DATE()')
+                ->whereRaw("( ( {$date->getTimestamp()} - UNIX_TIMESTAMP(shift_metas.repeat_start) ) % shift_metas.repeat_interval = 0 )")
+                ->get()
+                ->first()
+            ;
+
+            if ($result) {
+                $result->date = $date->format('Y-m-d');
+                array_push($repeating_shifts, $result)
+            }
+
+        }
+
+        return {
+            'standalone' => $standalone_shifts,
+            'repeating'  => $repeating_shifts,
+        }
+
+    }
 }

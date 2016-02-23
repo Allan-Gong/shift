@@ -5,43 +5,9 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * @SWG\Definition(
- *      definition="Role",
- *      required={},
- *      @SWG\Property(
- *          property="id",
- *          description="id",
- *          type="integer",
- *          format="int32"
- *      ),
- *      @SWG\Property(
- *          property="role",
- *          description="role",
- *          type="string"
- *      ),
- *      @SWG\Property(
- *          property="pay_rate",
- *          description="pay_rate",
- *          type="string"
- *      ),
- *      @SWG\Property(
- *          property="created_at",
- *          description="created_at",
- *          type="string",
- *          format="date-time"
- *      ),
- *      @SWG\Property(
- *          property="updated_at",
- *          description="updated_at",
- *          type="string",
- *          format="date-time"
- *      )
- * )
- */
 class Role extends Model
 {
-    use SoftDeletes;
+    // use SoftDeletes;
 
 	public $table = "roles";
 
