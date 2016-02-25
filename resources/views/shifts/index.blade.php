@@ -5,7 +5,10 @@
     <div class="container">
 
         <h1 class="pull-left">Shifts</h1>
-        <a class="btn btn-primary pull-right" style="margin-top: 25px" href="{!! route('shifts.create') !!}">Add New</a>
+        <div class="clearfix"></div>
+        <p><strong>Week: {!! $monday !!} to {!! $sunday !!}</strong></p>
+        <div class="clearfix"></div>
+        <a class="btn btn-primary pull-right" style="margin-top: 25px" href="{!! route('shifts.create') . "?week={$week}" !!}">Add New</a>
 
         <div class="clearfix"></div>
 
@@ -13,11 +16,8 @@
 
         <div class="clearfix"></div>
 
-        @if($shifts->isEmpty())
-            <div class="well text-center">No Shifts found.</div>
-        @else
-            @include('shifts.table')
-        @endif
-        
+        @include('shifts.table')
+        @include('shifts.pagination')
+
     </div>
 @endsection

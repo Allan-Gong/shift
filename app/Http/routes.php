@@ -38,18 +38,22 @@ Route::group(['middleware' => 'web'], function () {
         // Routes for Shift
         Route::resource("shifts", "ShiftController");
         Route::get('shifts/delete/{id}', [
-            'as' => 'shifts.delete',
+            'as'   => 'shifts.delete',
+            'uses' => 'ShiftController@destroy',
+        ]);
+        Route::post('shifts/delete/{id}', [
+            'as'   => 'shifts.delete',
             'uses' => 'ShiftController@destroy',
         ]);
 
-         // Routes for Role
+        // Routes for Role
         Route::resource("roles", "RoleController");
         Route::get('roles/delete/{id}', [
             'as' => 'roles.delete',
             'uses' => 'RoleController@destroy',
         ]);
 
-         // Routes for Venue
+        // Routes for Venue
         Route::resource("venues", "VenueController");
         Route::get('venues/delete/{id}', [
             'as' => 'venues.delete',

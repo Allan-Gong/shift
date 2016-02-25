@@ -22,7 +22,7 @@ foreach ( $venues as $venue ) {
     $select_venues[$venue->id] = $venue->venue;
 }
 
-$select_users = array('' => 'Please select ...');
+$select_users = array('NULL' => 'Please select ...');
 foreach ( $users as $user ) {
     $select_users[$user->id] = $user->name();
 }
@@ -31,6 +31,8 @@ $select_shift_types = array();
 foreach ( $shift_types as $shift_type ) {
     $select_shift_types[$shift_type->id] = $shift_type->type;
 }
+
+// my_debug($shift_status);
 
 $select_shift_status = array();
 foreach ( $shift_status as $shift_status_object ) {
@@ -42,8 +44,9 @@ if ( $form_disabled ) {
     $form_attributes['disabled'] = 'disabled';
 }
 
-$shift_type_attributes = ['class' => 'form-control' ];
-if ( $is_repeating_shift ) {
+
+$shift_type_attributes = ['id' => 'id_of_shift_type_id'];
+if ( isset($shift) ) {
     $shift_type_attributes['disabled'] = 'disabled';
 }
 
@@ -80,7 +83,7 @@ $today = date('Y-m-d');
 <!--- Date Field --->
 <div class="form-group col-sm-6">
     {!! Form::label('date', 'Date:') !!}
-    {!! Form::date('date', $today, $form_attributes) !!}
+    {!! Form::date('date', null, $form_attributes) !!}
 </div>
 
 <!--- Start Time Field --->
@@ -124,7 +127,7 @@ $today = date('Y-m-d');
 @if ( !$form_disabled )
     {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
 @endif
-    <a href="{!! route('shifts.index') !!}" class="btn btn-default">{{ $form_disabled ? 'Back' : 'Cancel' }}</a>
+    <a href="{!! route('shifts.index') !!}?week={!! $week !!}" class="btn btn-default">{{ $form_disabled ? 'Back' : 'Cancel' }}</a>
 </div>
 
 @if ( $is_repeating_shift )
@@ -139,6 +142,7 @@ $(function(){
         $('.shift_saving_modal').modal('show');
 
         $('#shift_saving_modal_confirm').click(function(){
+            $('#id_of_shift_type_id').removeAttr('disabled');
             form.submit();
         });
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use DB;
+use App\Models\Shift;
 use App\Http\Requests;
 use App\Http\Requests\CreateShiftRequest;
 use App\Http\Requests\UpdateShiftRequest;
@@ -51,7 +53,8 @@ class ShiftController extends AppBaseController
 		$this->ShiftStatusRepository = $shiftStatusRepo;
 	}
 
-	protected function is_repeating_shift($shift_type_id) {
+	protected function is_repeating_shift($shift_type_id)
+	{
 		$shift_type_repeat = $this->shiftTypeRepository->findWhere(['type' => 'repeating'])->first();
 
         if ( $shift_type_repeat && $shift_type_id ) {
@@ -61,30 +64,39 @@ class ShiftController extends AppBaseController
         return false;
 	}
 
-	protected function get_repeating_shift_type_id() {
-		$shift_type_repeat = $this->shiftTypeRepository->findWhere(['type' => 'repeating'])->first();
-		return $shift_type_repeat->id;
-	}
-
-	protected function get_standalone_shift_type_id() {
-		$shift_type_repeat = $this->shiftTypeRepository->findWhere(['type' => 'standalone'])->first();
-		return $shift_type_repeat->id;
-	}
-
-	protected function set_repeating($shift) {
-		$repeat_interval = config('shift.repeat_interval');
-
-		$this->shiftMetaRepository->create([
-			'shift_id'        => $shift->id,
-			'repeat_start'    => $shift->date,
-			'repeat_interval' => $repeat_interval,
-		]);
-	}
-
-	protected function save_repeating_shift($shift)
+	protected function create_repeating_shifts($shift)
 	{
-		$shift->date = null;
+		$shift->repeating = date("Y-m-d H:i:s");
 		$shift->save();
+
+		$dt_shift_date = new \DateTime($shift->date);
+
+		$repeat_creation_count = config('shift.repeat_creation_count');
+		$repeat_interval       = config('shift.repeat_interval');
+
+		foreach (range(1, $repeat_creation_count) as $num) {
+
+			$day = $num * $repeat_interval;
+			$dt_replicated_shift_date = new \DateTime();
+			$dt_replicated_shift_date->add(new \DateInterval("P{$day}D"));
+
+    		$replicated_shift = $shift->replicate();
+
+    		$replicated_shift->date = $dt_replicated_shift_date->format('Y-m-d');
+
+			$replicated_shift->save();
+		}
+	}
+
+	protected function get_week_number_by_date($str_date)
+	{
+		$date = new \DateTime($str_date);
+		$week = $date->format("W");
+
+		$today = new \DateTime();
+		$week_today = $today->format("W");
+
+		return $week - $week_today;
 	}
 
 	protected function display_shift($id, $form_disabled = false) {
@@ -113,6 +125,7 @@ class ShiftController extends AppBaseController
 				'shift'              => $shift,
 				'form_disabled'      => $form_disabled,
 				'is_repeating_shift' => $this->is_repeating_shift($shift->shift_type_id),
+				'week'               => $this->get_week_number_by_date($shift->date),
 			))
 		;
 	}
@@ -126,14 +139,26 @@ class ShiftController extends AppBaseController
     public function index(Request $request)
 	{
         $this->shiftRepository->pushCriteria(new RequestCriteria($request));
-		$shifts = $this->shiftRepository->all();
 
-		// $roles = $this->roleRepository->all();
-		// $venues = $this->venueRepository->all();
+		$inputs = $request->all();
+
+		$week_num = 0;
+		if ( array_key_exists('week', $inputs) ) {
+			$week_num = $inputs['week'];
+		}
+
+		$shifts = Shift::get_weekly_shifts($week_num);
+
+        $monday_num = $week_num - 1;
+        $monday = date( 'Y-m-d', strtotime( "monday +{$monday_num} week" ) );
+        $sunday = date( 'Y-m-d', strtotime( "sunday +{$week_num} week" ) );
 
 		return view('shifts.index')
 			->with(array(
 				'shifts' => $shifts,
+				'week'   => $week_num,
+				'monday' => $monday,
+				'sunday' => $sunday,
 			))
 		;
 	}
@@ -143,14 +168,18 @@ class ShiftController extends AppBaseController
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function create(Request $request)
 	{
+		$inputs = $request->all();
+
+		$week = $inputs['week'];
+
 		$roles  = $this->roleRepository->all();
 		$venues = $this->venueRepository->all();
 		$users  = $this->userRepository->all();
 
 		$shift_types  = $this->shiftTypeRepository->all();
-		$shift_status = $this->shiftTypeRepository->all();
+		$shift_status = $this->ShiftStatusRepository->all();
 
 		return view('shifts.create')
 			->with(array(
@@ -161,6 +190,7 @@ class ShiftController extends AppBaseController
 				'shift_status'       => $shift_status,
 				'form_disabled'      => false,
 				'is_repeating_shift' => false,
+				'week'               => $week,
 			))
 		;
 	}
@@ -176,10 +206,14 @@ class ShiftController extends AppBaseController
 	{
 		$input = $request->all();
 
+		if ( $input['user_id'] == 'NULL' ) {
+			unset($input['user_id']);
+		}
+
 		$shift = $this->shiftRepository->create($input);
 
 		if ( $this->is_repeating_shift($shift->shift_type_id) ) {
-			$this->set_repeating($shift);
+			$this->create_repeating_shifts($shift);
 		}
 
 		Flash::success("Shift saved successfully.");
@@ -223,19 +257,14 @@ class ShiftController extends AppBaseController
 	{
 		$shift = $this->shiftRepository->findWithoutFail($id);
 
+		$week = $this->get_week_number_by_date($shift->date);
+
 		if (empty($shift)) {
 			Flash::error('Shift not found');
-			return redirect(route('shifts.index'));
+			return redirect(route('shifts.index') . "?week={$week}");
 		}
 
-		$is_repeating_shift_before = $this->is_repeating_shift($shift->shift_type_id);
-
 		$inputs = $request->all();
-
-		// echo '<pre>';
-		// print_r($inputs);
-		// echo '</pre>';
-		// exit;
 
 		$shift_type_id = $inputs['shift_type_id'];
 
@@ -244,16 +273,9 @@ class ShiftController extends AppBaseController
 			return $this->display_shift($id, false);
 		}
 
-		$is_repeating_shift_after = $this->is_repeating_shift($shift_type_id);
+		$is_repeating_shift = $this->is_repeating_shift($shift_type_id);
 
-		if ( $is_repeating_shift_before == false && $is_repeating_shift_after == true ) {
-			// Change from standalone to repeating, just need to add shift meta data
-			$shift = $this->shiftRepository->update($inputs, $id);
-			$this->set_repeating($shift);
-		}
-		else if ( $is_repeating_shift_before == true && $is_repeating_shift_after == true ) {
-			// Change from repeating to repeating
-
+		if ( $is_repeating_shift ) {
 			$shift_save_option = $inputs['shift_save_option'];
 
 			if ( !$shift_save_option ) {
@@ -262,73 +284,35 @@ class ShiftController extends AppBaseController
 			}
 
 			if ( $shift_save_option == 1 ) {
-				// User choose to only update the current shift instance
-				// Perform the following:
-
-				$shift_date              = $shift->date;
-				$shift_repeat_start_date = $shift->shift_meta->repeat_start;
-
-				$dt_shift_date         = new DateTime($shift_date);
-				$dt_shift_repeat_start = new DateTime($shift_repeat_start_date);
-				$dt_today              = new DateTime(date("Y-m-d"));
-
-				$dt_yesterday = new DateTime();
-				$dt_yesterday->add(DateInterval::createFromDateString('yesterday'));
-
-				// 1. Create a standalone shift out of the current instance of the repeating shift
-				$shift_standalone = $shift->replicate();
-				$shift_standalone->shift_type_id = $this->get_standalone_shift_type_id();
-				$shift_standalone->date = $shift_repeat_start_date;
-				$shift_standalone->saveOrFail();
-
-				// 2. If the current repeating shift is created in the past (not the first instance),
-				//    create a repeating shift based on the current repeating shift but ended yesterday
-				if ( $dt_shift_repeat_start != $dt_shift_date && $dt_shift_date < $dt_today ) {
-					$shift_repeating_past = $shift->replicate();
-
-					$shift_repeating_past->date = $shift_repeat_start_date;
-
-					$repeat_interval = config('shift.repeat_interval');
-
-					$this->shiftMetaRepository->create([
-						'shift_id'        => $shift_repeating_past->id,
-						'repeat_start'    => $shift_repeating_past->date,
-						'repeat_end'      => $dt_yesterday->format('Y-m-d'),
-						'repeat_interval' => $repeat_interval,
-					]);
-
-					$this->save_repeating_shift($shift_repeating_past);
-				}
-
-				// 3. Copy the current shift in action into a new repeating one,
-				//    set its start date to the next instance
+				// Updating only this shift
+				$shift = $this->shiftRepository->update($inputs, $id);
+				Flash::success('Shift updated successfully.');
+				return redirect(route('shifts.index') . "?week={$week}");
 			}
 			else if ( $shift_save_option == 2 ) {
-				// User choose to update current and future shift instances
-				// Perform the following:
+				DB::transaction(function()
+				{
+					// Update current shift and its following instance identified by the 'repeating' property
+					DB::table('shifts')
+						->where('repeating', $shift->repeating)
+						->where('date', '>=', $shift->date)
+					    ->update($inputs)
+					;
+				});
 
-				// 1. If the current repeating shift is created in the past (not the first instance),
-				//    create a repeating shift based on the current repeating shift but ended yesterday
-
-				// 2. Update the shift in action, set its start date to the current instance's date if it is not the
-				//    first instance. Otherwise, just update the shift in action.
+				Flash::success('This shift and all its following(future) shifts in the series are updated successfully.');
+				return redirect(route('shifts.index') . "?week={$week}");
 			}
 			else {
 				Flash::error('Error updating shift. Please try again.');
 				return $this->display_shift($id, false);
 			}
-
-		}
-		else if ( $is_repeating_shift_before == true && $is_repeating_shift_after == false ) {
-			// Change from repeating to standlone, enforced to be impossible
-			Flash::error('Error updating shift. Please try again.');
-			return $this->display_shift($id, false);
 		}
 		else {
 			// standalone shift update
 			$shift = $this->shiftRepository->update($inputs, $id);
 			Flash::success('Shift updated successfully.');
-			return redirect(route('shifts.index'));
+			return redirect(route('shifts.index') . "?week={$week}");
 		}
 	}
 
@@ -336,23 +320,68 @@ class ShiftController extends AppBaseController
 	 * Remove the specified Shift from storage.
 	 *
 	 * @param  int $id
+	 * @param  Request  $request
 	 *
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy($id, Request $request)
 	{
 		$shift = $this->shiftRepository->findWithoutFail($id);
 
-		if (empty($shift)) {
+		if ( empty($shift) ) {
 			Flash::error('Shift not found');
 
 			return redirect(route('shifts.index'));
 		}
 
-		$this->shiftRepository->delete($id);
+		$inputs = $request->all();
 
-		Flash::success('Shift deleted successfully.');
+		$week = $this->get_week_number_by_date($shift->date);
 
-		return redirect(route('shifts.index'));
+		if ( $shift->is_repeating() )
+		{
+			if ( !array_key_exists('shift_delete_option', $inputs) )
+			{
+				Flash::error("Error deleting shift: {$id}. Please try again.");
+				return redirect(route('shifts.index') . "?week={$week}");
+			}
+
+			$shift_delete_option = $inputs['shift_delete_option'];
+
+			if ( $shift_delete_option == 1 )
+			{
+				// delete current shift only
+				$this->shiftRepository->delete($id);
+				Flash::success('Shift deleted successfully.');
+
+				return redirect(route('shifts.index') . "?week={$week}");
+			}
+			else if ( $shift_delete_option == 2 )
+			{
+
+				// delete current shift and its following instance identified by the 'repeating' property
+				DB::table('shifts')
+					->where('repeating', $shift->repeating)
+					->where('date', '>=', $shift->date)
+				    ->delete()
+				;
+
+				Flash::success('This shift and all its following(future) shifts in the series are deleted successfully.');
+				return redirect(route('shifts.index') . "?week={$week}");
+			}
+			else
+			{
+				Flash::error("Error deleting shift: {$id}. Please try again.");
+				return redirect(route('shifts.index') . "?week={$week}");
+			}
+		}
+		else
+		{
+			// Deleting a standalone shift
+			$this->shiftRepository->delete($id);
+			Flash::success('Shift deleted successfully.');
+			return redirect(route('shifts.index') . "?week={$week}");
+		}
+
 	}
 }
