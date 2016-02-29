@@ -18,7 +18,7 @@ class CreateRolesTable extends Migration {
 			$table->string('role')->unique();
 			$table->string('pay_rate');
 			$table->timestamps();
-			$table->softDeletes();
+			// $table->softDeletes();
 		});
 	}
 

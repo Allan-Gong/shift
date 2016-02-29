@@ -50,17 +50,29 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('venues')->insert([
-            'venue'       => 'Monash University',
-            'address'   => '700 Blackburn Road, Notting Hill VIC 3168',
+            'venue'      => 'Monash University',
+            'address'    => '700 Blackburn Road, Notting Hill VIC 3168',
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
         ]);
 
         DB::table('venues')->insert([
-            'venue'       => 'Melbourne University',
-            'address'   => '757 Swanston St, Parkville VIC 3052',
+            'venue'      => 'Melbourne University',
+            'address'    => '757 Swanston St, Parkville VIC 3052',
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
+        ]);
+
+        DB::table('users')->insert([
+            'firstname'     => 'Allan',
+            'lastname'      => 'Gong',
+            'password'      => bcrypt('123456'),
+            'gender'        => 'Male',
+            'date_of_birth' => '1984-07-31',
+            'workplace'     => 'Monash University',
+            'email'         => 'hgon23@gmail.com',
+            'created_at'    => date("Y-m-d H:i:s"),
+            'updated_at'    => date("Y-m-d H:i:s"),
         ]);
     }
 }

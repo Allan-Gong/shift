@@ -25,10 +25,11 @@ class CreateShiftsTable extends Migration {
 			$table->string('notes')->nullable();
 			$table->timestamps();
 			$table->softDeletes();
-			$table->date('date');
+			$table->date('date')->nullable()->index();
 			$table->integer('shift_type_id')->unsigned()->nullable()->index();
 			$table->integer('shift_status_id')->unsigned()->nullable()->index();
 			$table->string('status');
+			$table->timestamp('repeating')->nullable()->index();
 		});
 	}
 

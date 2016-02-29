@@ -149,8 +149,7 @@ class ShiftController extends AppBaseController
 
 		$shifts = Shift::get_weekly_shifts($week_num);
 
-        $monday_num = $week_num - 1;
-        $monday = date( 'Y-m-d', strtotime( "monday +{$monday_num} week" ) );
+        $monday = date( 'Y-m-d', strtotime( "monday +{$week_num} week" ) );
         $sunday = date( 'Y-m-d', strtotime( "sunday +{$week_num} week" ) );
 
 		return view('shifts.index')
@@ -204,13 +203,13 @@ class ShiftController extends AppBaseController
 	 */
 	public function store(CreateShiftRequest $request)
 	{
-		$input = $request->all();
+		$inputs = $request->all();
 
-		if ( $input['user_id'] == 'NULL' ) {
+		if ( $inputs['user_id'] == 'NULL' ) {
 			unset($input['user_id']);
 		}
 
-		$shift = $this->shiftRepository->create($input);
+		$shift = $this->shiftRepository->create($inputs);
 
 		if ( $this->is_repeating_shift($shift->shift_type_id) ) {
 			$this->create_repeating_shifts($shift);
@@ -265,6 +264,10 @@ class ShiftController extends AppBaseController
 		}
 
 		$inputs = $request->all();
+
+		if ( $inputs['user_id'] == 'NULL' ) {
+			unset($inputs['user_id']);
+		}
 
 		$shift_type_id = $inputs['shift_type_id'];
 

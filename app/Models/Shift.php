@@ -120,8 +120,7 @@ class Shift extends Model
 
     public static function get_weekly_shifts($week_num = 0)
     {
-        $monday_num = $week_num - 1;
-        $monday = date( 'Y-m-d', strtotime( "monday +{$monday_num} week" ) );
+        $monday = date( 'Y-m-d', strtotime( "monday +{$week_num} week" ) );
         $sunday = date( 'Y-m-d', strtotime( "sunday +{$week_num} week" ) );
 
         $shifts = Shift::whereBetween('date', [$monday, $sunday])

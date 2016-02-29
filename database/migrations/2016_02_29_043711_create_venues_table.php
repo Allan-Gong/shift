@@ -18,7 +18,7 @@ class CreateVenuesTable extends Migration {
 			$table->string('venue')->unique();
 			$table->string('address');
 			$table->timestamps();
-			$table->softDeletes();
+			// $table->softDeletes();
 		});
 	}
 

@@ -15,7 +15,7 @@ class CreateShiftStatusTable extends Migration {
 		Schema::create('shift_status', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('status');
+			$table->string('status')->unique();
 			$table->timestamps();
 		});
 	}

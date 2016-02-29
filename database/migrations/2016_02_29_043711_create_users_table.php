@@ -20,12 +20,12 @@ class CreateUsersTable extends Migration {
 			$table->string('gender');
 			$table->date('date_of_birth');
 			$table->string('workplace');
-			$table->string('email')->unique();
+			$table->string('email')->unique()->index();
 			$table->string('password', 60);
 			$table->string('remember_token', 100)->nullable();
 			$table->timestamps();
 			$table->boolean('is_admin')->default(0);
-			$table->softDeletes();
+			// $table->softDeletes();
 		});
 	}
 
