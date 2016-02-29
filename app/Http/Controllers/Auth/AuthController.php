@@ -54,7 +54,7 @@ class AuthController extends Controller
             'firstname'     => 'required|max:255',
             'lastname'      => 'required|max:255',
             'gender'        => 'required|max:8',
-            'date_of_birth' => 'required|date_format:d/m/Y',
+            'date_of_birth' => 'required|date_format:Y-m-d',
             'workplace'     => 'required|max:255',
 
         ]);
