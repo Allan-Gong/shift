@@ -21,7 +21,8 @@
     @else
       @foreach($shifts as $shift)
           <?php $is_repeating_shift = $shift->is_repeating(); ?>
-          <tr>
+          <?php $repeating_shift_class_attribute = $is_repeating_shift ? 'class="bg-info"' : ''; ?>
+          <tr <?php echo $repeating_shift_class_attribute; ?>>
             <td>{!! $shift->id !!}</td>
       			<td>{!! $shift->get_role_string() !!}</td>
       			<td>{!! $shift->get_user_string() !!}</td>
@@ -33,8 +34,6 @@
       			<td>{!! $shift->clock_off !!}</td>
       			<td>{!! $shift->get_status_string() !!}</td>
       			<td>{!! $shift->notes !!}</td>
-  			<!-- <td>{!! $shift->created_at !!}</td> -->
-  			<!-- <td>{!! $shift->updated_at !!}</td> -->
             <td>
                 <a href="{!! route('shifts.edit', [$shift->id]) !!}"><i class="glyphicon glyphicon-edit"></i></a>
                 {!! Form::model($shift, ['route' => ['shifts.delete', $shift->id], 'method' => 'post', 'class' => 'shift_delete_form', 'style' => 'display: inline;']) !!}
