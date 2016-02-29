@@ -4780,7 +4780,7 @@
             "version": "dev-feature/laravel-five-stable",
             "source": {
                 "type": "git",
-                "url": "git@github.com:Xethron/migrations-generator.git",
+                "url": "git@github.com:JeffreyWay/Laravel-4-Generators.git",
                 "reference": "a358bb44f517e2b3c1fd4f848f2646857c75b3a4"
             },
             "require": {
