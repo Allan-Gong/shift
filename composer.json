@@ -74,5 +74,11 @@
     },
     "config": {
         "preferred-install": "dist"
+    },
+    "repositories": {
+        "repo-name": {
+            "type": "git",
+            "url": "git@github.com:Xethron/migrations-generator.git"
+        }
     }
 }

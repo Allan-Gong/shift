@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1f1713ee28313c5412aef7411d658233",
-    "content-hash": "e257d4c7dcd221dd63ab77069210c550",
+    "hash": "029d8eb862dd8d8b3286e14d46ae6981",
+    "content-hash": "0e7bcf496b7b2eceb8bdbdbfbeb16379",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -4819,7 +4819,7 @@
             "version": "dev-l5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Xethron/migrations-generator.git",
+                "url": "git@github.com:Xethron/migrations-generator.git",
                 "reference": "e5e86efb5731e6859ea0d96a806159f9f2c26ce1"
             },
             "dist": {
