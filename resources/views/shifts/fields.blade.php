@@ -52,7 +52,11 @@ if ( isset($shift) ) {
 
 $shift_type_attributes = array_merge($form_attributes, $shift_type_attributes);
 
-$today = date('Y-m-d');
+$today = null;
+
+if ( !isset($shift) ) {
+    $today = date('Y-m-d');
+}
 
 ?>
 
@@ -83,7 +87,7 @@ $today = date('Y-m-d');
 <!--- Date Field --->
 <div class="form-group col-sm-6">
     {!! Form::label('date', 'Date:') !!}
-    {!! Form::date('date', null, $form_attributes) !!}
+    {!! Form::date('date', $today, $form_attributes) !!}
 </div>
 
 <!--- Start Time Field --->
@@ -142,8 +146,17 @@ $(function(){
         $('.shift_saving_modal').modal('show');
 
         $('#shift_saving_modal_confirm').click(function(){
-            $('#id_of_shift_type_id').removeAttr('disabled');
-            form.submit();
+
+            shift_save_option = $('input:radio[name=shift_save_option]:checked').val();
+
+            if ( typeof shift_save_option === "undefined" ) {
+                $('.alert-danger').removeClass('hidden');
+                return false;
+            }
+            else {
+                $('#id_of_shift_type_id').removeAttr('disabled');
+                form.submit();
+            }
         });
 
         return false;

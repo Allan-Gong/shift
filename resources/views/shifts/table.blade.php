@@ -77,8 +77,6 @@ $(function(){
           }
           else
           {
-            console.log(shift_delete_option);
-            console.log($form);
             var input = $("<input>")
               .attr("type", "hidden")
               .attr("name", "shift_delete_option").val(shift_delete_option)

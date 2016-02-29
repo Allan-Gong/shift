@@ -6,6 +6,9 @@
         <h4 class="modal-title">Edit repeating shift</h4>
       </div>
       <div class="modal-body">
+        <div class="alert alert-danger hidden">
+          Must select a save option before continue !
+        </div>
         <div class="radio">
           <label><input type="radio" value="1" name="shift_save_option"><strong>Only this shift</strong>. All other shifts in the series will remain the same.</label>
         </div>
