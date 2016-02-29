@@ -206,7 +206,7 @@ class ShiftController extends AppBaseController
 		$inputs = $request->all();
 
 		if ( $inputs['user_id'] == 'NULL' ) {
-			unset($input['user_id']);
+			unset($inputs['user_id']);
 		}
 
 		$shift = $this->shiftRepository->create($inputs);
