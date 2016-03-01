@@ -1,19 +1,16 @@
 <table class="table table-responsive">
     <thead>
-      <th>Id</th>
-			<th>Role</th>
-			<th>Assignee</th>
-			<th>Venue</th>
-      <th>Date</th>
-			<th>Start Time</th>
-			<th>Finish Time</th>
-			<th>Clock On</th>
-			<th>Clock Off</th>
-			<th>Status</th>
-			<th>Notes</th>
-			<!-- <th>Created At</th> -->
-			<!-- <th>Updated At</th> -->
-      <th width="50px">Action</th>
+        <th>Role</th>
+        <th>Assignee</th>
+        <th>Venue</th>
+        <th>Date</th>
+        <th>Start Time</th>
+        <th>Finish Time</th>
+        <th>Clock On</th>
+        <th>Clock Off</th>
+        <th>Status</th>
+        <th>Notes</th>
+        <th width="50px">Action</th>
     </thead>
     <tbody>
     @if( $shifts->isEmpty() )
@@ -23,17 +20,16 @@
           <?php $is_repeating_shift = $shift->is_repeating(); ?>
           <?php $repeating_shift_class_attribute = $is_repeating_shift ? 'class="bg-info"' : ''; ?>
           <tr <?php echo $repeating_shift_class_attribute; ?>>
-            <td>{!! $shift->id !!}</td>
-      			<td>{!! $shift->get_role_string() !!}</td>
-      			<td>{!! $shift->get_user_string() !!}</td>
-      			<td>{!! $shift->get_venue_string() !!}</td>
+            <td>{!! $shift->get_role_string() !!}</td>
+            <td>{!! $shift->get_user_string() !!}</td>
+            <td>{!! $shift->get_venue_string() !!}</td>
             <td>{!! $shift->date !!}</td>
-      			<td>{!! $shift->start_time !!}</td>
-      			<td>{!! $shift->finish_time !!}</td>
-      			<td>{!! $shift->clock_on !!}</td>
-      			<td>{!! $shift->clock_off !!}</td>
-      			<td>{!! $shift->get_status_string() !!}</td>
-      			<td>{!! $shift->notes !!}</td>
+            <td>{!! $shift->start_time !!}</td>
+            <td>{!! $shift->finish_time !!}</td>
+            <td>{!! $shift->clock_on !!}</td>
+            <td>{!! $shift->clock_off !!}</td>
+            <td>{!! $shift->get_status_string() !!}</td>
+            <td>{!! $shift->notes !!}</td>
             <td>
                 <a href="{!! route('shifts.edit', [$shift->id]) !!}"><i class="glyphicon glyphicon-edit"></i></a>
                 {!! Form::model($shift, ['route' => ['shifts.delete', $shift->id], 'method' => 'post', 'class' => 'shift_delete_form', 'style' => 'display: inline;']) !!}
