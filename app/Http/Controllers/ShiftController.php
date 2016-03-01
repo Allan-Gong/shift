@@ -20,6 +20,7 @@ use InfyOm\Generator\Controller\AppBaseController;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 use App\Models\ShiftMeta;
+use Illuminate\Support\Facades\Input;
 
 class ShiftController extends AppBaseController
 {
@@ -69,20 +70,17 @@ class ShiftController extends AppBaseController
 		$shift->repeating = date("Y-m-d H:i:s");
 		$shift->save();
 
-		$dt_shift_date = new \DateTime($shift->date);
+		$shift_date = $shift->date;
 
 		$repeat_creation_count = config('shift.repeat_creation_count');
-		$repeat_interval       = config('shift.repeat_interval');
 
 		foreach (range(1, $repeat_creation_count) as $num) {
 
-			$day = $num * $repeat_interval;
-			$dt_replicated_shift_date = new \DateTime();
-			$dt_replicated_shift_date->add(new \DateInterval("P{$day}D"));
+            $next_shift_date = strtotime("{$shift_date} +{$num} weeks");
 
     		$replicated_shift = $shift->replicate();
 
-    		$replicated_shift->date = $dt_replicated_shift_date->format('Y-m-d');
+    		$replicated_shift->date = date('Y-m-d', $next_shift_date);
 
 			$replicated_shift->save();
 		}
@@ -294,15 +292,22 @@ class ShiftController extends AppBaseController
 				return redirect(route('shifts.index') . "?week={$week}");
 			}
 			else if ( $shift_save_option == 2 ) {
-				DB::transaction(function()
-				{
-					// Update current shift and its following instance identified by the 'repeating' property
-					DB::table('shifts')
-						->where('repeating', $shift->repeating)
-						->where('date', '>=', $shift->date)
-					    ->update($inputs)
-					;
-				});
+                
+                // Update current shift and its following instance identified by the 'repeating' property
+
+                DB::transaction(function() use ($shift, $inputs) {
+                    // 1 . First delete the current shift and its following instances
+                    DB::table('shifts')
+                        ->where('repeating', $shift->repeating)
+                        ->where('date', '>=', $inputs['date'])
+                        ->delete()
+                    ;
+
+                    $updated_shift = $this->shiftRepository->create($inputs);
+
+                    // 2. Re-create this repeating shift with the updated inputs
+                    $this->create_repeating_shifts($updated_shift);
+                });
 
 				Flash::success('This shift and all its following(future) shifts in the series are updated successfully.');
 				return redirect(route('shifts.index') . "?week={$week}");
