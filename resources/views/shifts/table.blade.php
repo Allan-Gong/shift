@@ -53,10 +53,9 @@
 
 $(function(){
     $('.btn_delete_standalone_shift').click(function(event){
-      event.preventDefault();
-      event.stopPropagation();
 
       return confirm('Are you sure to delete this Shift ?');
+
     });
 
     $('.btn_delete_repeating_shift').click(function(event){
