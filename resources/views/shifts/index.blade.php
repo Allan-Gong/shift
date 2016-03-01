@@ -18,6 +18,7 @@
 
         @include('shifts.table')
         @include('shifts.pagination')
+        @include('shifts.admin')
 
     </div>
 @endsection

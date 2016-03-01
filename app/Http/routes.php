@@ -45,6 +45,10 @@ Route::group(['middleware' => 'web'], function () {
             'as'   => 'shifts.delete',
             'uses' => 'ShiftController@destroy',
         ]);
+        Route::get('shifts/admin/purge', [
+            'as'   => 'shifts.purge',
+            'uses' => 'ShiftController@purge',
+        ]);
 
         // Routes for Role
         Route::resource("roles", "RoleController");

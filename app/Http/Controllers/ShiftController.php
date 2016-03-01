@@ -292,7 +292,7 @@ class ShiftController extends AppBaseController
 				return redirect(route('shifts.index') . "?week={$week}");
 			}
 			else if ( $shift_save_option == 2 ) {
-                
+
                 // Update current shift and its following instance identified by the 'repeating' property
 
                 DB::transaction(function() use ($shift, $inputs) {
@@ -338,7 +338,7 @@ class ShiftController extends AppBaseController
 		$shift = $this->shiftRepository->findWithoutFail($id);
 
 		if ( empty($shift) ) {
-			Flash::error('Shift not found');
+			Flash::error('Shift for deletion not found');
 
 			return redirect(route('shifts.index'));
 		}
@@ -393,4 +393,19 @@ class ShiftController extends AppBaseController
 		}
 
 	}
+
+    /**
+     * Remove the specified Shift from storage.
+     *
+     * @param  Request  $request
+     *
+     * @return Response
+     */
+    public function purge(Request $request)
+    {
+        DB::table('shifts')->delete();
+        Flash::success('All Shifts deleted successfully.');
+        return redirect(route('shifts.index'));
+
+    }
 }
