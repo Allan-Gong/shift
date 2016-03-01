@@ -147,10 +147,11 @@ class ShiftController extends AppBaseController
 			$week_num = $inputs['week'];
 		}
 
-		$shifts = Shift::get_weekly_shifts($week_num);
-
-        $monday = date( 'Y-m-d', strtotime( "monday +{$week_num} week" ) );
+		$monday_num = $week_num - 1;
+        $monday = date( 'Y-m-d', strtotime( "monday +{$monday_num} week" ) );
         $sunday = date( 'Y-m-d', strtotime( "sunday +{$week_num} week" ) );
+
+        $shifts = Shift::get_weekly_shifts($monday, $sunday);
 
 		return view('shifts.index')
 			->with(array(

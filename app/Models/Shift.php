@@ -118,11 +118,8 @@ class Shift extends Model
         return empty($this->repeating) ? false : true;
     }
 
-    public static function get_weekly_shifts($week_num = 0)
+    public static function get_weekly_shifts($monday, $sunday)
     {
-        $monday = date( 'Y-m-d', strtotime( "monday +{$week_num} week" ) );
-        $sunday = date( 'Y-m-d', strtotime( "sunday +{$week_num} week" ) );
-
         $shifts = Shift::whereBetween('date', [$monday, $sunday])
             ->orderBy('date')
             ->orderBy('start_time')
