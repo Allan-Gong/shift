@@ -93,13 +93,13 @@ if ( !isset($shift) ) {
 <!--- Start Time Field --->
 <div class="form-group col-sm-6">
     {!! Form::label('start_time', 'Start Time:') !!}
-    {!! Form::select('start_time', $select_times, '09:00', $form_attributes) !!}
+    {!! Form::select('start_time', $select_times, null, $form_attributes) !!}
 </div>
 
 <!--- Finish Time Field --->
 <div class="form-group col-sm-6">
     {!! Form::label('finish_time', 'Finish Time:') !!}
-    {!! Form::select('finish_time', $select_times, '17:00', $form_attributes) !!}
+    {!! Form::select('finish_time', $select_times, null, $form_attributes) !!}
 </div>
 
 <!--- Clock On Field --->
