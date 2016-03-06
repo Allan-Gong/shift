@@ -49,6 +49,15 @@ Route::group(['middleware' => 'web'], function () {
             'as'   => 'shifts.purge',
             'uses' => 'ShiftController@purge',
         ]);
+        Route::get('roster', [
+            'as'   => 'shifts.roster',
+            'uses' => 'ShiftController@roster',
+        ]);
+        Route::get('notice-board', [
+            'as'   => 'shifts.notice_board',
+            'uses' => 'ShiftController@notice_board',
+        ]);
+
 
         // Routes for Role
         Route::resource("roles", "RoleController");
@@ -62,6 +71,12 @@ Route::group(['middleware' => 'web'], function () {
         Route::get('venues/delete/{id}', [
             'as' => 'venues.delete',
             'uses' => 'VenueController@destroy',
+        ]);
+
+        // Routes for Payroll
+        Route::get('payroll-export', [
+            'as' => 'payroll.export',
+            'uses' => 'PayrollController@export',
         ]);
 
     });

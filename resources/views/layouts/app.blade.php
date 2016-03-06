@@ -51,9 +51,20 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url('/home') }}">Home</a></li>
-                    <li><a href="{{ url('/shifts') }}">Shifts</a></li>
-                    <li><a href="{{ url('/roles') }}">Roles</a></li>
-                    <li><a href="{{ url('/venues') }}">Venues</a></li>
+                    <li><a href="{{ url('/roster') }}">Roster</a></li>
+                    <li><a href="{{ url('/notice-board') }}">Notice Board</a></li>
+                    <li>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            Admin <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{ url('/venues') }}">Venues</a></li>
+                            <li><a href="{{ url('/roles') }}">Roles</a></li>
+                            <li><a href="{{ url('/shifts') }}">Shifts</a></li>
+                            <li><a href="{{ url('/payroll-export') }}">Payroll Export</a></li>
+                        </ul>
+                    </li>
+
                 </ul>
 
                 <!-- Right Side Of Navbar -->

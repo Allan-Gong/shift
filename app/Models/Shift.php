@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Shift extends Model
 {
-    use SoftDeletes;
+//    use SoftDeletes;
 
 	public $table = "shifts";
 
@@ -127,6 +127,30 @@ class Shift extends Model
         ;
 
         return $shifts;
-
     }
+
+    public static function get_confirmed_weekly_shifts($monday, $sunday)
+    {
+        $shifts = Shift::whereBetween('date', [$monday, $sunday])
+            ->where('shift_status_id', 2)
+            ->orderBy('date')
+            ->orderBy('start_time')
+            ->get()
+        ;
+
+        return $shifts;
+    }
+
+    public static function get_available_weekly_shifts($monday, $sunday)
+    {
+        $shifts = Shift::whereBetween('date', [$monday, $sunday])
+            ->where('shift_status_id', 1)
+            ->orderBy('date')
+            ->orderBy('start_time')
+            ->get()
+        ;
+
+        return $shifts;
+    }
+
 }

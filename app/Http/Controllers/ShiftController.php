@@ -129,7 +129,7 @@ class ShiftController extends AppBaseController
 	}
 
 	/**
-	 * Display a listing of the Shift.
+	 * Display all Shifts.
 	 *
      * @param Request $request
 	 * @return Response
@@ -160,6 +160,73 @@ class ShiftController extends AppBaseController
 			))
 		;
 	}
+
+	/**
+	 * Display a listing of the confirmed Shifts.
+	 *
+     * @param Request $request
+	 * @return Response
+	 */
+    public function roster(Request $request)
+	{
+        $this->shiftRepository->pushCriteria(new RequestCriteria($request));
+
+		$inputs = $request->all();
+
+		$week_num = 0;
+		if ( array_key_exists('week', $inputs) ) {
+			$week_num = $inputs['week'];
+		}
+
+		$monday_num = $week_num - 1;
+        $monday = date( 'Y-m-d', strtotime( "monday +{$monday_num} week" ) );
+        $sunday = date( 'Y-m-d', strtotime( "sunday +{$week_num} week" ) );
+
+        $shifts = Shift::get_confirmed_weekly_shifts($monday, $sunday);
+
+		return view('shifts.roster')
+			->with(array(
+				'shifts' => $shifts,
+				'week'   => $week_num,
+				'monday' => $monday,
+				'sunday' => $sunday,
+			))
+		;
+	}
+
+	/**
+	 * Display a listing of the pending/available Shifts.
+	 *
+	 * @param Request $request
+	 * @return Response
+	 */
+	public function notice_board(Request $request)
+	{
+		$this->shiftRepository->pushCriteria(new RequestCriteria($request));
+
+		$inputs = $request->all();
+
+		$week_num = 0;
+		if ( array_key_exists('week', $inputs) ) {
+			$week_num = $inputs['week'];
+		}
+
+		$monday_num = $week_num - 1;
+		$monday = date( 'Y-m-d', strtotime( "monday +{$monday_num} week" ) );
+		$sunday = date( 'Y-m-d', strtotime( "sunday +{$week_num} week" ) );
+
+		$shifts = Shift::get_available_weekly_shifts($monday, $sunday);
+
+		return view('shifts.notice_board')
+			->with(array(
+				'shifts' => $shifts,
+				'week'   => $week_num,
+				'monday' => $monday,
+				'sunday' => $sunday,
+			))
+			;
+	}
+
 
 	/**
 	 * Show the form for creating a new Shift.
