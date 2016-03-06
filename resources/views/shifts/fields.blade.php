@@ -65,6 +65,11 @@ if ( !isset($shift) ) {
 <div class="form-group col-sm-6">
     {!! Form::label('shift_type', 'Type:') !!}
     {!! Form::select('shift_type_id', $select_shift_types, null, $shift_type_attributes) !!}
+
+    @if ( isset($shift) )
+        {!! Form::hidden('shift_type_id') !!}
+    @endif
+
 </div>
 
 <div class="form-group col-sm-6">
@@ -154,7 +159,7 @@ $(function(){
                 return false;
             }
             else {
-                $('#id_of_shift_type_id').removeAttr('disabled');
+                // $('#id_of_shift_type_id').removeAttr('disabled');
                 form.submit();
             }
         });
